@@ -1,14 +1,16 @@
-import { Plugin, MarkdownPostProcessor, MarkdownPostProcessorContext } from 'obsidian';
+/**
+ * This plugin hides the zettel ID in Obsidian markdown preview.
+ */
+import { Plugin, MarkdownPostProcessorContext } from 'obsidian';
 
-export default class MyPlugin extends Plugin {
+export default class ZettelIdHiderPlugin extends Plugin {
+	/**
+	 * Called when the plugin is loaded.
+	 * Registers a markdown post-processor to hide zettel IDs in the preview.
+	 */
 	async onload() {
 		this.registerMarkdownPostProcessor((el: HTMLElement, ctx: MarkdownPostProcessorContext) => {
-			const html = el.innerHTML;
-			// console.log('html:', html);
-			const regex = /(<a[^>]*>)(\d{12}\s)([^<]*<\/a>)/g;
-			el.innerHTML = html.replace(regex, (match, p1, p2, p3) => {
-				return p1 + p3;
-			});
+			el.innerHTML = el.innerHTML.replace(/(<a[^>]*>)(\d{12}\s)([^<]*<\/a>)/g, '$1$3');
 			return el;
 		});
 	}
